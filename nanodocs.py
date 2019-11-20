@@ -183,7 +183,7 @@ async def rpc(ctx):
         try:
             await ctx.send(embed=rpc_list[ctx.subcommand_passed])
         except:
-            await ctx.send("Hmm, I can't find that, maybe look at https://docs.nano.org/commands/rpc-protocol/")
+            await ctx.send("Hmm, I can't find that, maybe look at <https://docs.nano.org/commands/rpc-protocol/>")
 
 @bot.group(aliases=['gloss','explain'])
 async def glossary(ctx):
@@ -200,34 +200,34 @@ async def glossary(ctx):
         try:
             await ctx.send(embed=gloss_list[ctx.subcommand_passed])
         except:
-            await ctx.send("Hmm, I can't find that, maybe look at https://docs.nano.org/glossary/")
+            await ctx.send("Hmm, I can't find that, maybe look at <https://docs.nano.org/glossary/>")
 
 
 
 @bot.event
 async def on_message(message):
-    try:
-        rpc_list = loadRPCdescr()
-    except Exception as e:
-        print('Error when getting RPCs: ', e)
+    rpc_base_url = "https://docs.nano.org/commands/rpc-protocol/"
+    rpc_parse = urllib.parse.urlparse(message.content)
+    if rpc_base_url in rpc_parse.path:
+        try:
+            rpc_list = loadRPCdescr()
+            rpc = rpc_parse.fragment.split(' ')[0]
+            if rpc in rpc_list:
+                await message.channel.send(embed=rpc_list[rpc])
+        except Exception as e:
+            print('Error when getting RPCs: ', e)
 
-    base_url = "https://docs.nano.org/commands/rpc-protocol/"
-    parse = urllib.parse.urlparse(message.content)
-    if base_url in parse.path:
-        rpc = parse.fragment.split(' ')[0]
-        if rpc in rpc_list:
-            await message.channel.send(embed=rpc_list[rpc])
-    try:
-        gloss_list = loadGLOSSdescr()
-    except Exception as e:
-        print('Error when getting Gloss: ', e)
-
-    base_url = "https://docs.nano.org/glossary/"
-    parse = urllib.parse.urlparse(message.content)
-    if base_url in parse.path:
-        gloss = parse.fragment.split(' ')[0]
-        if gloss in gloss_list:
-            await message.channel.send(embed=gloss_list[glossary])
+    else:
+        gloss_base_url = "https://docs.nano.org/commands/glossary/"
+        gloss_parse = urllib.parse.urlparse(message.content)
+        if gloss_base_url in gloss_parse.path:
+            try:
+                gloss_list = loadRPCdescr()
+                gloss = gloss_parse.fragment.split(' ')[0]
+                if gloss in gloss_list:
+                    await message.channel.send(embed=gloss_list[gloss])
+            except Exception as e:
+                print('Error when getting Glossary: ', e)
     await  bot.process_commands(message)
 
 if __name__ == "__main__":
