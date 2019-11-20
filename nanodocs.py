@@ -30,7 +30,7 @@ bot.remove_command("help")
 datenow = datetime.datetime.now()
 
 # 1 hour cache for RPC
-cache = TTLCache(maxsize=1, ttl=3600)
+cache = TTLCache(maxsize=10, ttl=3600)
 
 
 @bot.event
