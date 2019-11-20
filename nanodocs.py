@@ -160,7 +160,7 @@ def loadGLOSSdescr():
 
         for (n, v) in fields:
             e.add_field(name=n, value=v)
-        gloss_list[command] = e
+        gloss_list[command.lower()] = e
     cache['glossary'] = gloss_list
     return gloss_list
 
@@ -199,7 +199,7 @@ async def glossary(ctx, *args):
 
     else:
         try:
-            await ctx.send(embed=gloss_list[arg.replace(' ','-')])
+            await ctx.send(embed=gloss_list[arg.lower().replace(' ','-')])
         except:
             await ctx.send("Hmm, I can't find that, maybe look at <https://docs.nano.org/glossary/>")
 
