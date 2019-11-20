@@ -206,28 +206,28 @@ async def glossary(ctx):
 
 @bot.event
 async def on_message(message):
-    rpc_base_url = "https://docs.nano.org/commands/rpc-protocol/"
-    rpc_parse = urllib.parse.urlparse(message.content)
-    if rpc_base_url in rpc_parse.path:
-        try:
-            rpc_list = loadRPCdescr()
-            rpc = rpc_parse.fragment.split(' ')[0]
-            if rpc in rpc_list:
-                await message.channel.send(embed=rpc_list[rpc])
-        except Exception as e:
-            print('Error when getting RPCs: ', e)
-
-    else:
-        gloss_base_url = "https://docs.nano.org/commands/glossary/"
-        gloss_parse = urllib.parse.urlparse(message.content)
-        if gloss_base_url in gloss_parse.path:
+    base_url = "https://docs.nano.org/"
+    if base_url in message.content:
+        rpc_parse = urllib.parse.urlparse(message.content)
+        if '/commands/rpc-protocol/' == rpc_parse.path:
             try:
-                gloss_list = loadRPCdescr()
-                gloss = gloss_parse.fragment.split(' ')[0]
-                if gloss in gloss_list:
-                    await message.channel.send(embed=gloss_list[gloss])
+                rpc_list = loadRPCdescr()
+                rpc = rpc_parse.fragment.split(' ')[0]
+                if rpc in rpc_list:
+                    await message.channel.send(embed=rpc_list[rpc])
             except Exception as e:
-                print('Error when getting Glossary: ', e)
+                print('Error when getting RPCs: ', e)
+
+        else:
+            gloss_parse = urllib.parse.urlparse(message.content)
+            if '/glossary/' == gloss_parse.path:
+                try:
+                    gloss_list = loadGLOSSdescr()
+                    gloss = gloss_parse.fragment.split(' ')[0]
+                    if gloss in gloss_list:
+                        await message.channel.send(embed=gloss_list[gloss])
+                except Exception as e:
+                    print('Error when getting Glossary: ', e)
     await  bot.process_commands(message)
 
 if __name__ == "__main__":
