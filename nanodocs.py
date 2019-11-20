@@ -186,19 +186,20 @@ async def rpc(ctx):
             await ctx.send("Hmm, I can't find that, maybe look at <https://docs.nano.org/commands/rpc-protocol/>")
 
 @bot.group(aliases=['gloss','explain'])
-async def glossary(ctx):
+async def glossary(ctx, *args):
+    arg = ' '.join(args)
     try:
         gloss_list = loadGLOSSdescr()
     except Exception as e:
         print('Error when getting Gloss: ', e)
 
-    print(ctx.subcommand_passed)
-    if ctx.subcommand_passed is None:
+    print(arg)
+    if not arg:
         await ctx.send("Please specify what you're looking for.")
 
     else:
         try:
-            await ctx.send(embed=gloss_list[ctx.subcommand_passed])
+            await ctx.send(embed=gloss_list[arg.replace(' ','-')])
         except:
             await ctx.send("Hmm, I can't find that, maybe look at <https://docs.nano.org/glossary/>")
 
