@@ -16,6 +16,7 @@ from discord.utils import get
 from dotenv import load_dotenv
 
 load_dotenv()
+TOKEN = os.getenv('TOKEN', None)
 if TOKEN is None:
     print('Set TOKEN="YOUR_TOKEN" in the .env file')
     sys.exit(1)
